@@ -9,7 +9,7 @@ export const images = {
   logo: '/images/nivea-logo.png',
   wordmarkWhite: '/images/nivea-wordmark-white.png',
 
-  /** Portada: reemplazar por la foto final en alta resolución con el mismo nombre. */
+  /** Portada: frame del aviso NIVEA Creme provisto, sin el texto original. */
   hero: '/images/hero.jpg',
   brandOpenTin: '/images/brand-open-tin.jpg',
 

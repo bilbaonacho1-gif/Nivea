@@ -67,12 +67,24 @@ export function Intro() {
       data-intro={position}
       className={`absolute inset-x-0 h-1/2 overflow-hidden ${position === 'top' ? 'top-0' : 'bottom-0'}`}
     >
-      <div data-intro="half" className={`absolute inset-x-0 h-[200%] ${position === 'top' ? 'top-0' : 'bottom-0'}`}>
+      <div
+        data-intro="half"
+        className={`absolute inset-x-0 h-[200%] bg-[linear-gradient(180deg,#0628a8_0%,#03209a_45%,#001670_100%)] ${position === 'top' ? 'top-0' : 'bottom-0'}`}
+      >
+        {/* Desktop: la foto completa a sangre */}
         <img
           data-intro="photo"
           src={images.hero}
-          alt={position === 'top' ? 'Dos latas de NIVEA Creme sobre azulejos azules' : ''}
-          className="h-full w-full object-cover object-[34%_center] md:object-center"
+          alt={position === 'top' ? 'Lata de NIVEA Creme abierta junto a su tapa, sobre fondo azul' : ''}
+          className="hidden h-full w-full object-cover object-left md:block"
+          draggable={false}
+        />
+        {/* Mobile: las latas centradas sobre el mismo azul del fondo */}
+        <img
+          data-intro="photo"
+          src={images.hero}
+          alt=""
+          className="absolute top-[calc(40%-50.5vw)] left-[-14vw] w-[200vw] max-w-none [mask-image:linear-gradient(to_bottom,transparent,black_16%,black_84%,transparent)] md:hidden"
           draggable={false}
         />
       </div>
@@ -126,19 +138,25 @@ export function Intro() {
 
       {/* Textos de portada */}
       <div data-intro="hint" className="pointer-events-none absolute inset-0 text-paper">
-        <div data-intro="load" className="mx-auto flex max-w-[1400px] items-start justify-between px-5 pt-5 md:px-10 md:pt-8">
+        <div data-intro="load" className="mx-auto flex max-w-[1400px] items-start px-5 pt-5 md:px-10 md:pt-8">
           <Logo tone="light" size="md" />
-          <p className="kicker hidden pt-3 text-paper/80 md:block">Campaña verano</p>
+        </div>
+        <div className="absolute inset-x-0 bottom-32 px-5 md:inset-y-0 md:right-[5%] md:left-auto md:flex md:items-center md:px-0">
+          <div data-intro="load">
+            <p className="kicker text-sun">NIVEA SUN · Campaña verano</p>
+            <h1 className="display mt-4 text-[clamp(3.6rem,6.4vw,7.4rem)]">
+              Find your
+              <br />
+              <em className="text-sun">summer.</em>
+            </h1>
+          </div>
         </div>
         <div
           data-intro="load"
-          className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-4 pb-[max(1.75rem,env(safe-area-inset-bottom))] md:pb-10"
+          className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-2 pb-[max(1.75rem,env(safe-area-inset-bottom))] text-paper/75 md:pb-10"
         >
-          <p className="kicker text-[0.8rem] tracking-[0.5em]">Find your summer</p>
-          <span className="flex flex-col items-center gap-2 text-paper/75">
-            <span className="text-[0.7rem] tracking-[0.18em] uppercase">Deslizá</span>
-            <ArrowDown className="h-4 w-4 animate-bounce" strokeWidth={1.5} aria-hidden />
-          </span>
+          <span className="text-[0.7rem] tracking-[0.18em] uppercase">Deslizá</span>
+          <ArrowDown className="h-4 w-4 animate-bounce" strokeWidth={1.5} aria-hidden />
         </div>
       </div>
     </section>
