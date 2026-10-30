@@ -23,7 +23,7 @@ export function Campaign() {
       // La foto protagonista se abre de un recorte central a sangre completa.
       gsap.fromTo(
         q('[data-c="hero"]'),
-        { clipPath: 'inset(14% 10% 14% 10%)' },
+        { clipPath: 'inset(6% 5% 6% 5%)' },
         {
           clipPath: 'inset(0% 0% 0% 0%)',
           ease: 'none',
@@ -43,16 +43,6 @@ export function Campaign() {
           },
         )
       })
-      // La franja azul crece con la lectura del titular.
-      gsap.fromTo(
-        q('[data-c="stripe"]'),
-        { scaleY: 0 },
-        {
-          scaleY: 1,
-          ease: 'none',
-          scrollTrigger: { trigger: q('[data-c="headline"]')[0], start: 'top 85%', end: 'bottom 30%', scrub: 0.6 },
-        },
-      )
       // El envase sube apenas más rápido que la foto.
       gsap.fromTo(
         q('[data-c="product"]'),
@@ -69,28 +59,19 @@ export function Campaign() {
 
   return (
     <section ref={root} id="campana" className="relative bg-cream text-ink">
-      {/* Titular con franja azul */}
-      <div className="relative mx-auto max-w-[1300px] px-5 pt-20 md:px-10 md:pt-36">
-        <div className="relative grid gap-10 md:grid-cols-12">
-          <div data-c="headline" className="relative md:col-span-8">
-            {/* Franja solar que cruza el titular */}
-            <span
-              data-c="stripe"
-              aria-hidden
-              className="absolute -top-[6%] -bottom-[10%] left-[58%] w-[clamp(18px,2.6vw,40px)] origin-top bg-sun md:left-[54%]"
-            />
-            <p data-reveal className="kicker relative text-nivea">
+      {/* Titular */}
+      <div className="mx-auto max-w-[1300px] px-5 pt-24 md:px-10 md:pt-32">
+        <div className="grid gap-8 md:grid-cols-12 md:items-end md:gap-10">
+          <div className="md:col-span-8">
+            <p data-reveal className="kicker text-nivea">
               La campaña
             </p>
-            <h2 data-reveal className="relative mt-6 text-[clamp(3rem,7.4vw,7.2rem)] leading-[0.92] tracking-[-0.03em]">
-              <span className="block font-extrabold">El verano se</span>
-              <span className="block font-extrabold">disfruta mejor</span>
-              <span className="display block font-normal tracking-[-0.01em]">
-                cuando te <em className="text-nivea">cuidás.</em>
-              </span>
+            <h2 data-reveal className="display mt-6 text-[clamp(3rem,6.6vw,6.4rem)]">
+              El verano se disfruta mejor cuando te <em className="text-nivea">cuidás.</em>
             </h2>
           </div>
-          <div className="md:col-span-4 md:pt-24">
+          <div className="md:col-span-4 md:pb-3">
+            <span data-reveal aria-hidden className="mb-6 block h-px w-12 bg-sun" />
             <p data-reveal className="max-w-[34ch] text-[1.05rem] leading-relaxed text-ink/80 md:text-lg">
               Cada día de sol es una oportunidad para disfrutar, explorar y vivir nuevas experiencias. Descubrí la línea
               NIVEA SUN y encontrá el cuidado solar que acompaña tu manera de vivir el verano.
@@ -100,7 +81,7 @@ export function Campaign() {
       </div>
 
       {/* Foto protagonista con el envase integrado */}
-      <div className="relative mt-16 md:mt-24">
+      <div className="relative mt-12 md:mt-16">
         <div data-c="hero" className="grain relative h-[72svh] overflow-hidden md:h-[92svh]">
           <div data-parallax="9" className="absolute -inset-y-[12%] inset-x-0">
             <img src={images.summerBeach} alt="Sombrillas a rayas azules y blancas frente al mar" className="h-full w-full object-cover" />
