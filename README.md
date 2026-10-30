@@ -18,13 +18,14 @@ En Vercel se detecta como proyecto Vite (build `npm run build`, salida `dist`).
 
 | Sección | Archivo |
 |---------|---------|
-| Portada (dos latas) que se abre en dos mitades al scrollear y revela la descripción de la marca | `src/sections/Intro.tsx` |
-| Entrada al quiz | `src/sections/QuizStart.tsx` |
-| Quiz a pantalla completa (una pregunta por pantalla, progreso, volver atrás, atajos A–D) | `src/sections/quiz/*` |
-| Resultado: cuatro composiciones distintas, aparece al terminar | `src/sections/result/*` |
-| Premio: la lata se desbloquea al terminar el quiz; al tocarla se abre y muestra el premio demo | `src/sections/Rewards.tsx` |
+| Intro cinematográfica: la lata NIVEA Creme sobre azul; con el scroll la tapa se desplaza, la cámara entra en la crema y el blanco se vuelve la página | `src/sections/Intro.tsx` |
+| La campaña: titular con franja solar, foto protagonista que se abre a sangre con el envase integrado y cuatro momentos de verano | `src/sections/Campaign.tsx` |
+| Entrada al quiz: la foto del agua se expande a pantalla completa | `src/sections/QuizStart.tsx` |
+| Quiz: cinco escenas a pantalla dividida, foto que se encadena con la anterior, progreso continuo, atajos A–D | `src/sections/quiz/*` |
+| Resultado: paleta y motivo gráfico propios por personalidad + tarjeta 4:5 para redes (se descarga o comparte como PNG) | `src/sections/result/*`, `src/lib/shareCard.ts` |
+| Premio: la misma lata de la intro; la tapa se arrastra o se toca para abrirla | `src/sections/Rewards.tsx`, `src/components/Tin.tsx` |
 
-El scroll es suave (Lenis) y está sincronizado con GSAP ScrollTrigger; con “reducir movimiento” se desactiva.
+El scroll es suave (Lenis) y está sincronizado con GSAP ScrollTrigger; con “reducir movimiento” se desactivan las animaciones largas.
 
 ## Lógica
 
@@ -44,7 +45,8 @@ El scroll es suave (Lenis) y está sincronizado con GSAP ScrollTrigger; con “r
 
 | Archivo | Uso |
 |---|---|
-| `hero.jpg` | Portada (las dos latas). **Reemplazar por la foto final en alta resolución con el mismo nombre.** |
-| `brand-open-tin.jpg` | Lata abierta en la descripción de marca. |
-| `nivea-logo.png`, `nivea-wordmark-white.png` | Logo NIVEA provisto (fondo transparente). |
-| `summer-beach.jpg`, `pool-background.jpg`, `summer-skincare.jpg`, `summer-travel.jpg`, `summer-still.jpg`, `sky.jpg` | Fotos de preguntas y resultados (recortes del carrusel de referencia, máx. 1080 px). |
+| `hero.jpg` | Foto de la lata NIVEA Creme provista (sin el texto del aviso original). |
+| `tin-lid.png`, `tin-base.png` | Tapa y base recortadas de `hero.jpg`; la base se reconstruyó bajo la tapa. Se usan en la intro, la transición al resultado y el premio. |
+| `product-protect-moisture.png` | Packshot recortado del carrusel de referencia (versión UK, baja resolución). |
+| `nivea-logo.png`, `nivea-wordmark-white.png` | Logo NIVEA provisto. |
+| `summer-beach.jpg`, `pool-background.jpg`, `summer-skincare.jpg`, `summer-travel.jpg`, `summer-still.jpg`, `sky.jpg` | Recortes del carrusel de referencia con un grade común (luz cálida, sombras azuladas). Reemplazar por las finales en alta resolución con el mismo nombre. |

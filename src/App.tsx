@@ -6,6 +6,7 @@ import { ToastProvider } from './components/Toast'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import { Intro } from './sections/Intro'
+import { Campaign } from './sections/Campaign'
 import { QuizStart } from './sections/QuizStart'
 import { QuizOverlay } from './sections/quiz/QuizOverlay'
 import { ResultSection } from './sections/result/ResultSection'
@@ -36,6 +37,7 @@ export default function App() {
         <Header />
         <main>
           <Intro />
+          <Campaign />
           <QuizStart />
           <ResultSection />
           <Rewards />
