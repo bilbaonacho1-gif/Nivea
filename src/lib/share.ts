@@ -25,7 +25,7 @@ export function readSharedLetter(): Letter | null {
 
 export function shareText(letter?: Letter | null) {
   if (!letter) return '¿Qué tipo de NIVEA SUN sos? Hacé el test y descubrí tu personalidad de verano.'
-  return `Me salió ${personalities[letter].name} ☀️ y mi NIVEA SUN es ${products[letter].shortName}. ¿Y vos qué NIVEA SUN sos?`
+  return `Me salió ${personalities[letter].name} ☀️ y mi NIVEA SUN es ${products[letter].name}. ¿Y vos qué NIVEA SUN sos?`
 }
 
 export async function copyText(text: string): Promise<boolean> {

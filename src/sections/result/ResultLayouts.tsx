@@ -43,10 +43,8 @@ export function PosterLayout({ result }: LayoutProps) {
           <SecondaryNote letter={result.secondary} />
           <ResultActions />
         </div>
-        <div className="md:col-span-5 md:col-start-8 md:-mt-48">
-          <div className="bg-sand/70 px-6 pt-10 pb-8">
-            <ResultProduct letter={p.letter} imageClass="h-64 md:h-80" />
-          </div>
+        <div className="md:col-span-5 md:col-start-8 md:pt-3">
+          <ResultProduct letter={p.letter} />
         </div>
       </div>
     </div>
@@ -83,8 +81,8 @@ export function TiltLayout({ result }: LayoutProps) {
             <Photo src={p.image} alt={p.imageAlt} className="aspect-[4/5] w-full" />
             <p className="display absolute bottom-4 left-5 text-2xl italic text-ink md:bottom-5">Nunca quieta.</p>
           </div>
-          <div className="relative -mt-24 md:-mt-32">
-            <ResultProduct letter={p.letter} tone="light" imageClass="h-64 md:h-80" />
+          <div className="mt-12 md:ml-[12%]">
+            <ResultProduct letter={p.letter} tone="light" />
           </div>
         </div>
       </div>
@@ -115,8 +113,8 @@ export function CollageLayout({ result }: LayoutProps) {
               </svg>
             </p>
           </div>
-          <div className="mt-12 border-t border-ink/20 pt-8 md:mt-16">
-            <ResultProduct letter={p.letter} imageClass="h-48 md:h-60" />
+          <div className="mt-12 md:mt-16">
+            <ResultProduct letter={p.letter} />
           </div>
         </div>
         <div className="order-1 space-y-8 md:order-2 md:col-span-5 md:col-start-8 md:pt-16">
@@ -172,8 +170,8 @@ export function CalmLayout({ result }: LayoutProps) {
           <div className="mt-8 flex justify-center">
             <Moods letter={p.letter} />
           </div>
-          <div className="mt-14 w-full max-w-md border-t border-ink/15 pt-10 text-left">
-            <ResultProduct letter={p.letter} imageClass="h-56 md:h-64" />
+          <div className="mt-14 w-full max-w-md text-left">
+            <ResultProduct letter={p.letter} />
           </div>
           <div className="mt-12 flex w-full max-w-md flex-col items-center gap-8">
             <SecondaryNote letter={result.secondary} />

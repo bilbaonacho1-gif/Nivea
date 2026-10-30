@@ -1,11 +1,11 @@
 import type { Letter } from './quiz'
 
 /**
- * Recompensas CONCEPTUALES. Ningún código, descuento ni sorteo es real:
- * es una propuesta académica de campaña y así se comunica en la interfaz.
+ * Premio CONCEPTUAL. El código no es real: es una propuesta académica de campaña
+ * y así se comunica en la interfaz.
  */
 export const DEMO_DISCLAIMER =
-  'Propuesta conceptual académica. Códigos, descuentos y sorteos son ficticios, no tienen validez comercial y no son promociones de NIVEA.'
+  'Propuesta conceptual académica. El premio y el código son ficticios, no tienen validez comercial y no son una promoción de NIVEA.'
 
 export const demoCodes: Record<Letter, string> = {
   A: 'DEMO-VERANIEGA-15',
@@ -13,5 +13,3 @@ export const demoCodes: Record<Letter, string> = {
   C: 'DEMO-ESPONTANEA-15',
   D: 'DEMO-SKINCARE-15',
 }
-
-export const bonusCode = 'DEMO-AMIGA-2X1'
