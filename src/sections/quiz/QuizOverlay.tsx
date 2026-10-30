@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { X } from 'lucide-react'
 import { gsap, prefersReducedMotion, useGSAP } from '../../animations/gsap'
+import { lockScroll, scrollToId } from '../../animations/smoothScroll'
 import { questions } from '../../data/quiz'
 import { useQuiz } from '../../hooks/QuizContext'
 import { Logo } from '../../components/Logo'
@@ -17,12 +18,8 @@ export function QuizOverlay() {
   // Bloquea el scroll de la página mientras el quiz está abierto.
   useEffect(() => {
     if (!visible) return
-    const html = document.documentElement
-    const prev = html.style.overflow
-    html.style.overflow = 'hidden'
-    return () => {
-      html.style.overflow = prev
-    }
+    lockScroll(true)
+    return () => lockScroll(false)
   }, [visible])
 
   // Apertura: un círculo solar que se expande desde abajo.
@@ -47,9 +44,8 @@ export function QuizOverlay() {
 
   const handleDone = useCallback(() => {
     // Detrás del overlay, la página ya se ubica en el resultado.
-    const target = document.getElementById('resultado')
-    if (target) window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY, behavior: 'instant' })
     finish()
+    requestAnimationFrame(() => scrollToId('resultado', true))
   }, [finish])
 
   useEffect(() => {
@@ -75,7 +71,8 @@ export function QuizOverlay() {
       ref={root}
       role="dialog"
       aria-modal="true"
-      aria-label="Test: ¿Qué tipo de NIVEA SUN sos?"
+      aria-label="Quiz: ¿Qué tipo de NIVEA SUN sos?"
+      data-lenis-prevent
       className="fixed inset-0 z-[60] flex h-[100dvh] flex-col bg-cream text-ink"
     >
       {computing ? (

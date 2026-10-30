@@ -1,18 +1,18 @@
-import { RotateCcw, Share2 } from 'lucide-react'
+import { ArrowDown, RotateCcw, Share2 } from 'lucide-react'
 import type { Letter } from '../../data/quiz'
 import { personalities } from '../../data/personalities'
 import { products } from '../../data/products'
 import { useQuiz } from '../../hooks/QuizContext'
 import { useShareActions } from '../../hooks/useShareActions'
 import { Button } from '../../components/Button'
-import { ProductImage } from '../../components/ProductImage'
+import { scrollToId } from '../../animations/smoothScroll'
 
 type Tone = 'light' | 'dark'
 
 export function ResultKicker({ tone = 'dark' }: { tone?: Tone }) {
   return (
     <p data-r="fade" className={`kicker ${tone === 'light' ? 'text-sun' : 'text-nivea'}`}>
-      04 — Tu personalidad de verano
+      Tu personalidad de verano
     </p>
   )
 }
@@ -22,11 +22,14 @@ export function ResultActions({ tone = 'dark' }: { tone?: Tone }) {
   const { share } = useShareActions()
   return (
     <div data-r="fade" className="flex flex-wrap items-center gap-x-6 gap-y-3">
-      <Button variant={tone === 'light' ? 'sun' : 'ink'} onClick={share} icon={<Share2 className="h-4 w-4" />}>
+      <Button variant="sun" onClick={() => scrollToId('premio')} icon={<ArrowDown className="h-4 w-4" />}>
+        Abrir mi premio
+      </Button>
+      <Button variant={tone === 'light' ? 'outline-light' : 'ink'} onClick={share} icon={<Share2 className="h-4 w-4" />}>
         Compartir resultado
       </Button>
       <Button
-        variant={tone === 'light' ? 'outline-light' : 'outline'}
+        variant="text"
         onClick={restart}
         icon={<RotateCcw className="h-4 w-4" />}
       >
@@ -49,21 +52,12 @@ export function Moods({ letter, tone = 'dark' }: { letter: Letter; tone?: Tone }
   )
 }
 
-/** Producto asociado al resultado. */
-export function ResultProduct({ letter, tone = 'dark', imageClass = 'h-56 md:h-72' }: { letter: Letter; tone?: Tone; imageClass?: string }) {
-  const product = products[letter]
+/** Producto asociado al resultado (solo el nombre). */
+export function ResultProduct({ letter, tone = 'dark' }: { letter: Letter; tone?: Tone }) {
   return (
-    <div className="flex items-end gap-5">
-      <div data-r="product" className="shrink-0">
-        <ProductImage product={product} tone={tone} className={`${imageClass} w-auto drop-shadow-[0_24px_24px_rgb(0_10_40/0.28)]`} />
-      </div>
-      <div data-r="fade" className="pb-2">
-        <p className={`kicker text-[0.6rem] ${tone === 'light' ? 'text-sun' : 'text-nivea'}`}>Tu NIVEA SUN</p>
-        <p className="mt-2 max-w-[16ch] text-lg leading-tight font-bold md:text-xl">{product.name}</p>
-        <p className={`mt-2 max-w-[28ch] text-sm leading-relaxed ${tone === 'light' ? 'text-paper/75' : 'text-ink/70'}`}>
-          {product.description}
-        </p>
-      </div>
+    <div data-r="fade" className={`border-t pt-5 ${tone === 'light' ? 'border-paper/30' : 'border-ink/20'}`}>
+      <p className={`kicker text-[0.6rem] ${tone === 'light' ? 'text-sun' : 'text-nivea'}`}>Tu NIVEA SUN</p>
+      <p className="mt-2 max-w-[22ch] text-xl leading-tight font-bold md:text-2xl">{products[letter].name}</p>
     </div>
   )
 }

@@ -6,9 +6,8 @@ import { clearSession, loadSession, saveSession } from '../lib/session'
 export type Phase = 'idle' | 'playing' | 'computing' | 'done'
 
 export interface RewardsState {
+  /** La lata del premio ya se abrió. */
   lidOpened: boolean
-  raffleNumber: string | null
-  challengeDone: boolean
 }
 
 interface QuizState {
@@ -30,10 +29,8 @@ type Action =
   | { type: 'finish' }
   | { type: 'restart' }
   | { type: 'openLid' }
-  | { type: 'joinRaffle'; number: string }
-  | { type: 'completeChallenge' }
 
-const emptyRewards: RewardsState = { lidOpened: false, raffleNumber: null, challengeDone: false }
+const emptyRewards: RewardsState = { lidOpened: false }
 
 const initialState: QuizState = {
   phase: 'idle',
@@ -68,10 +65,6 @@ function reducer(state: QuizState, action: Action): QuizState {
       return { ...initialState, phase: 'playing', open: true }
     case 'openLid':
       return { ...state, rewards: { ...state.rewards, lidOpened: true } }
-    case 'joinRaffle':
-      return { ...state, rewards: { ...state.rewards, raffleNumber: action.number } }
-    case 'completeChallenge':
-      return { ...state, rewards: { ...state.rewards, challengeDone: true } }
   }
 }
 
@@ -86,7 +79,7 @@ function hydrate(): QuizState {
     index: Math.min(Math.max(0, Number(saved.index) || 0), questions.length - 1),
     answers,
     open: false,
-    rewards: { ...emptyRewards, ...(complete ? saved.rewards : null) },
+    rewards: { lidOpened: Boolean(complete && saved.rewards?.lidOpened) },
   }
 }
 
@@ -102,8 +95,6 @@ interface QuizContextValue {
   finish: () => void
   restart: () => void
   openLid: () => void
-  joinRaffle: () => void
-  completeChallenge: () => void
 }
 
 const QuizContext = createContext<QuizContextValue | null>(null)
@@ -134,9 +125,6 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       finish: () => dispatch({ type: 'finish' }),
       restart: () => dispatch({ type: 'restart' }),
       openLid: () => dispatch({ type: 'openLid' }),
-      joinRaffle: () =>
-        dispatch({ type: 'joinRaffle', number: `SK-${Math.floor(1000 + Math.random() * 9000)}` }),
-      completeChallenge: () => dispatch({ type: 'completeChallenge' }),
     }),
     [state, result],
   )
