@@ -1,15 +1,16 @@
 import { useRef } from 'react'
 import { ArrowDown } from 'lucide-react'
 import { gsap, prefersReducedMotion, useGSAP } from '../animations/gsap'
-import { images } from '../data/assets'
 import { Logo } from '../components/Logo'
+import { Tin } from '../components/Tin'
 
 /**
- * Portada + descripción de marca, en una sola escena fijada.
+ * Introducción cinematográfica.
  *
- * La foto de portada (las dos latas) se parte en dos mitades que se abren
- * con el scroll, como una lata que se destapa, y dejan ver la descripción
- * de la marca con la lata abierta.
+ * 1. Fondo azul de estudio y la lata NIVEA Creme en primer plano.
+ * 2. Con el scroll, la tapa se desplaza y deja ver la crema.
+ * 3. La cámara se acerca hasta que la crema llena la pantalla.
+ * 4. El blanco de la crema se convierte en el fondo de la campaña y aparece el titular.
  */
 export function Intro() {
   const root = useRef<HTMLElement>(null)
@@ -19,15 +20,18 @@ export function Intro() {
       const q = gsap.utils.selector(root)
 
       if (prefersReducedMotion()) {
-        gsap.set(q('[data-intro="half"], [data-intro="hint"], [data-intro="seam"]'), { autoAlpha: 0 })
+        gsap.set(q('[data-i="wash"]'), { autoAlpha: 1 })
+        gsap.set(q('[data-i="hint"], [data-i="stage"]'), { autoAlpha: 0 })
         return
       }
 
-      // Entrada al cargar la página.
+      // Entrada al cargar: la lata aparece y un brillo recorre la tapa.
       gsap
         .timeline({ defaults: { ease: 'expo.out' } })
-        .from(q('[data-intro="photo"]'), { scale: 1.12, duration: 2.2 })
-        .from(q('[data-intro="load"]'), { y: 18, autoAlpha: 0, duration: 1.2, stagger: 0.12 }, 0.3)
+        .from(q('[data-tin="root"]'), { scale: 0.82, y: 60, autoAlpha: 0, duration: 1.8 })
+        .from(q('[data-tin="lid"] img'), { rotate: -14, duration: 2.2 }, 0)
+        .fromTo(q('[data-tin="shine"]'), { xPercent: 0 }, { xPercent: 320, duration: 1.6, ease: 'power2.inOut' }, 0.7)
+        .from(q('[data-i="load"]'), { y: 16, autoAlpha: 0, duration: 1.2, stagger: 0.1 }, 0.5)
 
       const mm = gsap.matchMedia()
       mm.add({ desktop: '(min-width: 768px)', mobile: '(max-width: 767px)' }, (ctx) => {
@@ -39,124 +43,83 @@ export function Intro() {
             scrollTrigger: {
               trigger: root.current,
               start: 'top top',
-              end: desktop ? '+=170%' : '+=140%',
+              end: desktop ? '+=210%' : '+=170%',
               pin: true,
-              scrub: 1.2,
+              scrub: 1,
               anticipatePin: 1,
             },
           })
-          .to(q('[data-intro="hint"]'), { autoAlpha: 0, y: -16, duration: 0.12 }, 0)
-          .to(q('[data-intro="photo"]'), { scale: 1.06, duration: 0.3 }, 0)
-          .fromTo(q('[data-intro="seam"]'), { scaleX: 0 }, { scaleX: 1, duration: 0.14, ease: 'power2.inOut' }, 0.08)
-          .to(q('[data-intro="seam"]'), { autoAlpha: 0, duration: 0.06 }, 0.24)
-          .to(q('[data-intro="top"]'), { yPercent: -100, duration: 0.6, ease: 'power2.inOut' }, 0.2)
-          .to(q('[data-intro="bottom"]'), { yPercent: 100, duration: 0.6, ease: 'power2.inOut' }, 0.2)
-          .from(q('[data-intro="brand"]'), { scale: 0.92, autoAlpha: 0, duration: 0.45, ease: 'power2.out' }, 0.32)
-          .from(q('[data-intro="tin"]'), { rotate: -8, yPercent: 12, duration: 0.5, ease: 'power2.out' }, 0.32)
-          .from(q('[data-intro="line"]'), { yPercent: 110, duration: 0.3, stagger: 0.05, ease: 'power3.out' }, 0.45)
-          .from(q('[data-intro="copy"]'), { y: 30, autoAlpha: 0, duration: 0.2, stagger: 0.05 }, 0.62)
-          .to({}, { duration: 0.12 })
+          // los textos de portada se retiran
+          .to(q('[data-i="hint"]'), { autoAlpha: 0, y: -14, duration: 0.1 }, 0)
+          // la tapa se desplaza y la cámara empieza a acercarse
+          .to(
+            q('[data-tin="lid"]'),
+            { xPercent: desktop ? 68 : 52, yPercent: -44, rotate: 26, duration: 0.36, ease: 'power2.inOut' },
+            0.02,
+          )
+          .to(q('[data-i="stage"]'), { scale: 1.22, duration: 0.36, ease: 'power1.inOut' }, 0.02)
+          // la cámara entra a la crema
+          .to(q('[data-tin="lid"]'), { xPercent: 190, yPercent: -150, rotate: 40, duration: 0.3, ease: 'power2.in' }, 0.4)
+          .to(q('[data-i="stage"]'), { scale: desktop ? 7.5 : 9, duration: 0.42, ease: 'power2.in' }, 0.38)
+          .to(q('[data-i="cream"]'), { autoAlpha: 1, duration: 0.14 }, 0.62)
+          .to(q('[data-i="wash"]'), { autoAlpha: 1, duration: 0.1 }, 0.72)
+          // el blanco de la crema se vuelve la página
+          .from(q('[data-i="line"]'), { yPercent: 115, duration: 0.18, stagger: 0.04, ease: 'power3.out' }, 0.78)
+          .from(q('[data-i="sub"]'), { y: 24, autoAlpha: 0, duration: 0.12, stagger: 0.04 }, 0.86)
+          .to({}, { duration: 0.06 })
       })
       return () => mm.revert()
     },
     { scope: root },
   )
 
-  const half = (position: 'top' | 'bottom') => (
-    <div
-      data-intro={position}
-      className={`absolute inset-x-0 h-1/2 overflow-hidden ${position === 'top' ? 'top-0' : 'bottom-0'}`}
-    >
-      <div
-        data-intro="half"
-        className={`absolute inset-x-0 h-[200%] bg-[linear-gradient(180deg,#0628a8_0%,#03209a_45%,#001670_100%)] ${position === 'top' ? 'top-0' : 'bottom-0'}`}
-      >
-        {/* Desktop: la foto completa a sangre */}
-        <img
-          data-intro="photo"
-          src={images.hero}
-          alt={position === 'top' ? 'Lata de NIVEA Creme abierta junto a su tapa, sobre fondo azul' : ''}
-          className="hidden h-full w-full object-cover object-left md:block"
-          draggable={false}
-        />
-        {/* Mobile: las latas centradas sobre el mismo azul del fondo */}
-        <img
-          data-intro="photo"
-          src={images.hero}
-          alt=""
-          className="absolute top-[calc(40%-50.5vw)] left-[-14vw] w-[200vw] max-w-none [mask-image:linear-gradient(to_bottom,transparent,black_16%,black_84%,transparent)] md:hidden"
-          draggable={false}
-        />
-      </div>
-    </div>
-  )
-
   return (
-    <section ref={root} id="inicio" aria-label="NIVEA SUN — Find your summer" className="relative h-svh overflow-hidden bg-cream">
-      {/* Descripción de marca: queda debajo y se revela al abrir la portada */}
-      <div id="marca" data-intro="brand" className="absolute inset-0 flex items-center text-ink">
-        <div className="mx-auto grid w-full max-w-[1300px] items-center gap-8 px-5 pt-16 md:grid-cols-12 md:gap-12 md:px-10 md:pt-0">
-          <div className="md:col-span-6 md:order-2">
-            <img
-              data-intro="tin"
-              src={images.brandOpenTin}
-              alt="Lata de NIVEA Creme abierta"
-              className="mx-auto h-[26svh] w-full object-cover shadow-[0_40px_60px_-30px_rgb(0_26_92/0.5)] md:h-auto md:aspect-[16/10]"
-              draggable={false}
-            />
-          </div>
-          <div className="md:col-span-6 md:order-1">
-            <p data-intro="copy" className="kicker text-nivea">
-              NIVEA SUN
-            </p>
-            <h2 className="display mt-4 text-[clamp(2.6rem,6vw,5.6rem)] md:mt-6">
-              {['El verano se disfruta', 'mejor cuando'].map((l) => (
-                <span key={l} className="block overflow-hidden pb-[0.06em]">
-                  <span data-intro="line" className="block">
-                    {l}
-                  </span>
-                </span>
-              ))}
-              <span className="block overflow-hidden pb-[0.08em]">
-                <span data-intro="line" className="block italic text-nivea">
-                  te cuidás.
-                </span>
-              </span>
-            </h2>
-            <p data-intro="copy" className="mt-6 max-w-[42ch] text-[1.02rem] leading-relaxed text-ink/80 md:mt-8 md:text-lg">
-              Cada día de sol es una oportunidad para disfrutar, explorar y vivir nuevas experiencias. Descubrí la línea
-              NIVEA SUN y encontrá el cuidado solar que acompaña tu manera de vivir el verano.
-            </p>
-          </div>
-        </div>
+    <section ref={root} id="inicio" aria-label="NIVEA SUN — Find your summer" className="bg-studio relative h-svh overflow-hidden">
+      {/* Cámara: la lata */}
+      <div data-i="stage" className="absolute inset-0 flex items-center justify-center will-change-transform">
+        <Tin shine className="w-[min(74vw,46svh)] md:w-[min(44vmin,440px)]">
+          <span data-i="cream" aria-hidden className="invisible absolute -inset-[18%] rounded-full bg-cream" />
+        </Tin>
       </div>
-
-      {/* Portada partida en dos mitades */}
-      {half('top')}
-      {half('bottom')}
-      <div data-intro="seam" className="absolute inset-x-0 top-1/2 h-px origin-center bg-paper/80" />
 
       {/* Textos de portada */}
-      <div data-intro="hint" className="pointer-events-none absolute inset-0 text-paper">
-        <div data-intro="load" className="mx-auto flex max-w-[1400px] items-start px-5 pt-5 md:px-10 md:pt-8">
+      <div data-i="hint" className="pointer-events-none absolute inset-0 text-paper">
+        <div data-i="load" className="mx-auto flex max-w-[1400px] items-center justify-between px-5 pt-6 md:px-10 md:pt-8">
           <Logo tone="light" size="md" />
+          <p className="kicker hidden text-paper/80 md:block">Campaña de verano</p>
         </div>
-        <div className="absolute inset-x-0 bottom-32 px-5 md:inset-y-0 md:right-[5%] md:left-auto md:flex md:items-center md:px-0">
-          <div data-intro="load">
-            <p className="kicker text-sun">NIVEA SUN · Campaña verano</p>
-            <h1 className="display mt-4 text-[clamp(3.6rem,6.4vw,7.4rem)]">
-              Find your
-              <br />
-              <em className="text-sun">summer.</em>
-            </h1>
-          </div>
+        <div className="absolute inset-x-0 bottom-0 mx-auto flex max-w-[1400px] items-end justify-between px-5 pb-[max(1.75rem,env(safe-area-inset-bottom))] md:px-10 md:pb-10">
+          <p data-i="load" className="display text-[clamp(2rem,4vw,3.4rem)] leading-none">
+            Find your <em className="text-sun">summer.</em>
+          </p>
+          <span data-i="load" className="flex flex-col items-center gap-2 text-paper/75">
+            <span className="text-[0.66rem] tracking-[0.2em] uppercase">Deslizá</span>
+            <ArrowDown className="h-4 w-4 animate-bounce" strokeWidth={1.5} aria-hidden />
+          </span>
         </div>
-        <div
-          data-intro="load"
-          className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-2 pb-[max(1.75rem,env(safe-area-inset-bottom))] text-paper/75 md:pb-10"
-        >
-          <span className="text-[0.7rem] tracking-[0.18em] uppercase">Deslizá</span>
-          <ArrowDown className="h-4 w-4 animate-bounce" strokeWidth={1.5} aria-hidden />
+      </div>
+
+      {/* Final: la crema se vuelve la página de la campaña */}
+      <div data-i="wash" className="invisible absolute inset-0 bg-cream text-ink">
+        <div className="mx-auto flex h-full max-w-[1300px] flex-col justify-center px-5 md:px-10">
+          <p data-i="sub" className="kicker text-nivea">
+            NIVEA SUN · Campaña de verano
+          </p>
+          <h1 className="display mt-6 text-[clamp(4.2rem,13vw,13rem)]">
+            <span className="block overflow-hidden pb-[0.04em]">
+              <span data-i="line" className="block">
+                Find your
+              </span>
+            </span>
+            <span className="block overflow-hidden pb-[0.1em]">
+              <span data-i="line" className="block italic text-nivea">
+                summer.
+              </span>
+            </span>
+          </h1>
+          <p data-i="sub" className="mt-8 max-w-[38ch] text-lg leading-relaxed text-ink/75 md:text-xl">
+            Una experiencia NIVEA SUN para descubrir cómo disfrutás el verano y qué personalidad tenés bajo el sol.
+          </p>
         </div>
       </div>
     </section>

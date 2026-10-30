@@ -13,6 +13,8 @@ export interface Question {
   /** Lado de la fotografía en desktop: alterna el ritmo entre preguntas. */
   side: 'left' | 'right'
   caption: string
+  /** Nombre de la escena: cada pregunta se presenta como una escena de campaña. */
+  scene: string
   options: Record<Letter, string>
 }
 
@@ -25,6 +27,7 @@ export const questions: Question[] = [
     imageAlt: 'Sombrillas a rayas azules y blancas frente al mar',
     side: 'left',
     caption: 'Sábado, 11:40',
+    scene: 'Sábado',
     options: {
       A: 'Me voy a la playa o pileta.',
       B: 'Salgo a hacer deporte.',
@@ -40,6 +43,7 @@ export const questions: Question[] = [
     imageAlt: 'Agua turquesa de una pileta con reflejos de sol',
     side: 'right',
     caption: 'Agua, 26°',
+    scene: 'Agua',
     options: {
       A: 'Vivo esperando el verano.',
       B: 'No puedo quedarme quieta.',
@@ -55,6 +59,7 @@ export const questions: Question[] = [
     imageAlt: 'Sombrero de paja, libro y anteojos de sol sobre una toalla amarilla en la arena',
     side: 'left',
     caption: 'Toalla compartida',
+    scene: 'Amigos',
     options: {
       A: 'La que siempre propone vacaciones.',
       B: 'La más activa del grupo.',
@@ -70,6 +75,7 @@ export const questions: Question[] = [
     imageAlt: 'Bolso de paja con pañuelo atado, apoyado en la arena frente al mar',
     side: 'right',
     caption: 'Bolso listo',
+    scene: 'El bolso',
     options: {
       A: 'La lona, la sombrilla y una buena playlist.',
       B: 'Zapatillas, botella de agua y ganas de moverme.',
@@ -85,6 +91,7 @@ export const questions: Question[] = [
     imageAlt: 'Cielo con nubes altas sobre un mar turquesa',
     side: 'left',
     caption: '19:58, todavía hay luz',
+    scene: 'Atardecer',
     options: {
       A: 'Todavía en la orilla, sin ganas de irme.',
       B: 'Volviendo de una caminata o de un partido.',

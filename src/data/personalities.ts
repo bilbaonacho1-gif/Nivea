@@ -1,7 +1,19 @@
 import { images } from './assets'
 import type { Letter } from './quiz'
 
-export type ResultLayout = 'poster' | 'tilt' | 'collage' | 'calm'
+export type Motif = 'rays' | 'waves' | 'scribble' | 'sparkle'
+
+export interface Theme {
+  /** Fondo de la escena y de la tarjeta. */
+  bg: string
+  /** Color de texto principal. */
+  ink: string
+  /** Acento: franja vertical, itálicas y detalles. */
+  accent: string
+  /** Texto secundario. */
+  muted: string
+  motif: Motif
+}
 
 export interface Personality {
   letter: Letter
@@ -16,8 +28,7 @@ export interface Personality {
   moods: [string, string, string]
   image: string
   imageAlt: string
-  secondaryImage?: string
-  layout: ResultLayout
+  theme: Theme
 }
 
 export const personalities: Record<Letter, Personality> = {
@@ -31,7 +42,7 @@ export const personalities: Record<Letter, Personality> = {
     moods: ['Arena', 'Sal', 'Siesta en la lona'],
     image: images.summerBeach,
     imageAlt: 'Sombrillas a rayas azules y blancas frente al mar',
-    layout: 'poster',
+    theme: { bg: '#f2b300', ink: '#001a5c', accent: '#0033a1', muted: 'rgba(0,26,92,0.72)', motif: 'rays' },
   },
   B: {
     letter: 'B',
@@ -43,7 +54,7 @@ export const personalities: Record<Letter, Personality> = {
     moods: ['Movimiento', 'Agua', 'Planes al aire libre'],
     image: images.pool,
     imageAlt: 'Agua turquesa de una pileta con reflejos de sol',
-    layout: 'tilt',
+    theme: { bg: '#0033a1', ink: '#fdfbf6', accent: '#ffd45c', muted: 'rgba(253,251,246,0.78)', motif: 'waves' },
   },
   C: {
     letter: 'C',
@@ -55,8 +66,7 @@ export const personalities: Record<Letter, Personality> = {
     moods: ['Improvisar', 'Pasear', 'Decir que sí'],
     image: images.summerTravel,
     imageAlt: 'Bolso de paja con pañuelo atado, apoyado en la arena',
-    secondaryImage: images.summerStill,
-    layout: 'collage',
+    theme: { bg: '#f7f2e8', ink: '#001a5c', accent: '#0033a1', muted: 'rgba(0,26,92,0.72)', motif: 'scribble' },
   },
   D: {
     letter: 'D',
@@ -68,6 +78,6 @@ export const personalities: Record<Letter, Personality> = {
     moods: ['Rutina', 'Calma', 'Tiempo para mí'],
     image: images.summerSkincare,
     imageAlt: 'Sombrero de paja, libro y anteojos de sol sobre una toalla amarilla',
-    layout: 'calm',
+    theme: { bg: '#001a5c', ink: '#fdfbf6', accent: '#e8dac0', muted: 'rgba(253,251,246,0.75)', motif: 'sparkle' },
   },
 }

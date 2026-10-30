@@ -22,14 +22,14 @@ export function QuizOverlay() {
     return () => lockScroll(false)
   }, [visible])
 
-  // Apertura: un círculo solar que se expande desde abajo.
+  // Apertura: un telón que sube desde abajo.
   useGSAP(
     () => {
       if (!visible || prefersReducedMotion()) return
       gsap.fromTo(
         root.current,
-        { clipPath: 'circle(0% at 50% 100%)' },
-        { clipPath: 'circle(150% at 50% 100%)', duration: 1.1, ease: 'expo.inOut' },
+        { clipPath: 'inset(100% 0% 0% 0%)' },
+        { clipPath: 'inset(0% 0% 0% 0%)', duration: 1, ease: 'expo.inOut' },
       )
     },
     { dependencies: [visible] },
@@ -37,8 +37,16 @@ export function QuizOverlay() {
 
   const animateOut = useCallback((then: () => void) => {
     if (prefersReducedMotion() || !root.current) return then()
-    gsap.to(root.current, { clipPath: 'circle(0% at 50% 100%)', duration: 0.8, ease: 'expo.inOut', onComplete: then })
+    gsap.to(root.current, { clipPath: 'inset(0% 0% 100% 0%)', duration: 0.8, ease: 'expo.inOut', onComplete: then })
   }, [])
+
+  // Foto de la escena anterior, para encadenar la transición entre preguntas.
+  const lastImage = useRef<string | null>(null)
+  const currentImage = questions[state.index]?.image ?? null
+  useEffect(() => {
+    if (visible) lastImage.current = currentImage
+    else lastImage.current = null
+  }, [visible, currentImage])
 
   const handleClose = useCallback(() => animateOut(close), [animateOut, close])
 
@@ -79,31 +87,43 @@ export function QuizOverlay() {
         <ComputingScreen onDone={handleDone} />
       ) : (
         <>
-          <header className="relative z-10 flex items-center justify-between gap-4 border-b border-ink/15 bg-cream px-4 py-3 md:px-8">
-            <Logo size="sm" />
-            <div className="flex flex-1 items-center justify-center gap-3" aria-label={`Progreso: pregunta ${state.index + 1} de ${questions.length}`}>
-              <ol className="flex w-full max-w-[280px] gap-1.5">
-                {questions.map((q, i) => (
-                  <li key={q.id} className="relative h-[3px] flex-1 overflow-hidden bg-ink/15">
-                    <span
-                      className="absolute inset-0 origin-left bg-nivea transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
-                      style={{ transform: `scaleX(${i < state.index ? 1 : i === state.index ? 0.5 : 0})` }}
-                    />
-                  </li>
-                ))}
-              </ol>
-              <span className="kicker hidden text-[0.6rem] tabular-nums sm:inline">
-                {String(state.index + 1).padStart(2, '0')} / {String(questions.length).padStart(2, '0')}
-              </span>
+          <header className="relative z-10 bg-cream">
+            <div className="flex items-center justify-between gap-4 px-4 py-3 md:px-8">
+              <Logo size="sm" />
+              <p className="kicker hidden text-[0.6rem] text-ink/70 sm:block" aria-live="polite">
+                Escena {String(state.index + 1).padStart(2, '0')} · {current.scene}
+              </p>
+              <button
+                type="button"
+                onClick={handleClose}
+                className="kicker group inline-flex h-10 items-center gap-2 px-2 text-[0.6rem] text-ink transition-colors hover:text-nivea"
+                aria-label="Salir del quiz (tu progreso queda guardado)"
+              >
+                Salir <X className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={handleClose}
-              className="inline-flex h-10 w-10 items-center justify-center text-ink transition-colors hover:bg-ink hover:text-paper"
-              aria-label="Cerrar el test (tu progreso queda guardado)"
+            {/* Progreso: una línea continua con las cinco escenas marcadas */}
+            <div
+              role="progressbar"
+              aria-label="Progreso del quiz"
+              aria-valuemin={1}
+              aria-valuemax={questions.length}
+              aria-valuenow={state.index + 1}
+              className="relative h-[3px] bg-ink/10"
             >
-              <X className="h-5 w-5" />
-            </button>
+              <span
+                className="absolute inset-0 origin-left bg-nivea transition-transform duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                style={{ transform: `scaleX(${(state.index + 1) / questions.length})` }}
+              />
+              {questions.slice(1).map((q, i) => (
+                <span
+                  key={q.id}
+                  aria-hidden
+                  className="absolute top-0 h-full w-[3px] bg-cream"
+                  style={{ left: `${((i + 1) / questions.length) * 100}%` }}
+                />
+              ))}
+            </div>
           </header>
           <div className="min-h-0 flex-1">
             <QuestionScreen
@@ -112,6 +132,7 @@ export function QuizOverlay() {
               index={state.index}
               total={questions.length}
               previous={state.answers[state.index]}
+              fromImage={lastImage.current !== current.image ? lastImage.current : null}
               onSelect={answer}
               onBack={back}
             />

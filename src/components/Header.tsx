@@ -4,7 +4,7 @@ import { scrollToId } from '../animations/smoothScroll'
 import { useQuiz } from '../hooks/QuizContext'
 import { Logo } from './Logo'
 
-/** Barra superior: aparece cuando termina la portada. */
+/** Barra superior: aparece cuando termina la intro. */
 export function Header() {
   const ref = useRef<HTMLElement>(null)
   const { state, result, start, resume } = useQuiz()
@@ -12,7 +12,7 @@ export function Header() {
   useGSAP(() => {
     gsap.set(ref.current, { yPercent: -100 })
     ScrollTrigger.create({
-      trigger: '#test',
+      trigger: '#campana',
       start: 'top 64px',
       refreshPriority: -1,
       onEnter: () => gsap.to(ref.current, { yPercent: 0, duration: 0.6, ease: 'expo.out' }),
@@ -21,6 +21,7 @@ export function Header() {
   })
 
   const links = [
+    { id: 'campana', label: 'La campaña' },
     { id: 'test', label: 'El quiz' },
     ...(result ? [{ id: 'resultado', label: 'Resultado' }] : []),
     { id: 'premio', label: 'Premio' },
@@ -33,7 +34,7 @@ export function Header() {
       : { label: 'Jugar', action: start }
 
   return (
-    <header ref={ref} className="fixed inset-x-0 top-0 z-50 border-b border-ink/10 bg-cream/90 text-ink backdrop-blur-md">
+    <header ref={ref} className="fixed inset-x-0 top-0 z-50 border-b border-ink/10 bg-cream/85 text-ink backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-[1300px] items-center justify-between gap-6 px-5 md:px-10">
         <button type="button" onClick={() => scrollToId('inicio')} aria-label="NIVEA SUN — volver al inicio">
           <Logo size="sm" />
