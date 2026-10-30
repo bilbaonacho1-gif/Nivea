@@ -99,25 +99,21 @@ export function Intro() {
         </div>
       </div>
 
-      {/* Final: la crema se vuelve la página de la campaña */}
+      {/* Final: la crema se vuelve la página. Placa de título centrada, como en un film. */}
       <div data-i="wash" className="invisible absolute inset-0 bg-cream text-ink">
-        <div className="mx-auto flex h-full max-w-[1300px] flex-col justify-center px-5 md:px-10">
+        <div className="mx-auto flex h-full max-w-[1100px] flex-col items-center justify-center px-5 text-center md:px-10">
           <p data-i="sub" className="kicker text-nivea">
             NIVEA SUN · Campaña de verano
           </p>
-          <h1 className="display mt-6 text-[clamp(4.2rem,13vw,13rem)]">
-            <span className="block overflow-hidden pb-[0.04em]">
+          <h1 className="display mt-5 text-[clamp(3.4rem,min(10vw,17svh),10rem)] md:mt-7">
+            <span className="block overflow-hidden pb-[0.06em]">
               <span data-i="line" className="block">
-                Find your
-              </span>
-            </span>
-            <span className="block overflow-hidden pb-[0.1em]">
-              <span data-i="line" className="block italic text-nivea">
-                summer.
+                Find your <em className="text-nivea">summer.</em>
               </span>
             </span>
           </h1>
-          <p data-i="sub" className="mt-8 max-w-[38ch] text-lg leading-relaxed text-ink/75 md:text-xl">
+          <span data-i="sub" aria-hidden className="mt-6 block h-px w-16 bg-sun md:mt-8" />
+          <p data-i="sub" className="mt-6 max-w-[40ch] text-[1.02rem] leading-relaxed text-balance text-ink/75 md:mt-8 md:text-lg">
             Una experiencia NIVEA SUN para descubrir cómo disfrutás el verano y qué personalidad tenés bajo el sol.
           </p>
         </div>
