@@ -74,15 +74,23 @@ export function Moods({ letter }: { letter: Letter }) {
   )
 }
 
-/** Producto asociado al resultado (solo el nombre). */
+/** Producto asociado al resultado, con la foto del envase. */
 export function ResultProduct({ letter }: { letter: Letter }) {
   const t = personalities[letter].theme
   return (
-    <div data-r="fade" className="border-t pt-5" style={{ borderColor: t.muted }}>
-      <p className="kicker text-[0.6rem]" style={{ color: t.muted }}>
-        Tu NIVEA SUN
-      </p>
-      <p className="mt-2 max-w-[24ch] text-xl leading-tight font-bold md:text-2xl">{products[letter].name}</p>
+    <div data-r="fade" className="flex items-center gap-5 border-t pt-5" style={{ borderColor: t.muted }}>
+      <img
+        src={products[letter].image}
+        alt={`Envase de ${products[letter].name}`}
+        className="h-28 w-[3.75rem] shrink-0 object-cover shadow-[0_18px_30px_-16px_rgb(0_10_40/0.6)] md:h-32 md:w-[4.3rem]"
+        loading="lazy"
+      />
+      <div>
+        <p className="kicker text-[0.6rem]" style={{ color: t.muted }}>
+          Tu NIVEA SUN
+        </p>
+        <p className="mt-2 max-w-[24ch] text-xl leading-tight font-bold md:text-2xl">{products[letter].name}</p>
+      </div>
     </div>
   )
 }

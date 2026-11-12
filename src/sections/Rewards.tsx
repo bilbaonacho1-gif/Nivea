@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react'
+import type { Letter } from '../data/quiz'
 import { ArrowRight, Copy, Hand, Lock, RotateCcw, Share2 } from 'lucide-react'
 import { gsap, prefersReducedMotion, useGSAP } from '../animations/gsap'
 import { useReveal } from '../animations/useReveal'
 import { personalities } from '../data/personalities'
+import { products } from '../data/products'
 import { demoCodes, DEMO_DISCLAIMER } from '../data/rewards'
 import { useQuiz } from '../hooks/QuizContext'
 import { useShareActions } from '../hooks/useShareActions'
@@ -151,18 +153,22 @@ function PrizeTin() {
       >
         <Tin>
           {result && (
-            <div className="flex aspect-square w-full flex-col items-center justify-center gap-[0.6em] rounded-full bg-paper/90 p-[8%] text-center text-ink shadow-[inset_0_0_0_1px_rgb(0_26_92/0.08)]">
-              <span data-prize className="kicker text-[clamp(0.5rem,1.8vw,0.62rem)] text-nivea">
-                Premio demo
-              </span>
-              <span data-prize className="display text-[clamp(2.6rem,11vw,4.6rem)] leading-none">
-                15% <em className="text-nivea">off</em>
-              </span>
-              <span data-prize>
-                <CopyCode code={demoCodes[result.primary]} />
-              </span>
-              <span data-prize className="text-[clamp(0.55rem,2vw,0.7rem)] text-ink/55">
-                Ficticio. No válido para compras.
+            <div className="relative aspect-square w-full overflow-hidden rounded-full bg-paper shadow-[inset_0_0_0_1px_rgb(0_26_92/0.08)]">
+              <div data-prize className="absolute inset-0">
+                <img src={products[result.primary].image} alt="" aria-hidden className="h-full w-full scale-125 object-cover blur-xl" draggable={false} />
+                <img
+                  src={products[result.primary].image}
+                  alt={`Envase de ${products[result.primary].name}`}
+                  className="absolute inset-0 h-full w-full object-contain py-[7%] drop-shadow-[0_18px_22px_rgb(0_10_40/0.35)]"
+                  draggable={false}
+                />
+              </div>
+              <span
+                data-prize
+                className="absolute bottom-[14%] left-[11%] flex aspect-square w-[25%] flex-col items-center justify-center rounded-full bg-sun text-center text-ink shadow-[0_10px_24px_-8px_rgb(0_10_40/0.55)]"
+              >
+                <span className="display text-[clamp(1.2rem,4.6vw,2.1rem)] leading-none">15%</span>
+                <span className="kicker text-[clamp(0.45rem,1.5vw,0.58rem)]">off</span>
               </span>
             </div>
           )}
@@ -196,6 +202,40 @@ function PrizeTin() {
   )
 }
 
+/** Lo que ganaste, dicho con claridad: foto del producto, descuento y código. */
+function PrizeCard({ letter }: { letter: Letter }) {
+  const product = products[letter]
+  const root = useRef<HTMLDivElement>(null)
+  useGSAP(
+    () => {
+      if (prefersReducedMotion()) return
+      gsap.from(root.current, { y: 20, autoAlpha: 0, duration: 0.8, ease: 'expo.out', delay: 0.2 })
+    },
+    { scope: root },
+  )
+  return (
+    <div ref={root} className="mt-10 flex max-w-[30rem] items-stretch gap-5 bg-paper p-4 text-ink shadow-[0_30px_50px_-30px_rgb(0_5_30/0.8)] md:p-5">
+      <img
+        src={product.image}
+        alt={`Envase de ${product.name}`}
+        className="w-[5.5rem] shrink-0 object-cover md:w-[6.5rem]"
+        style={{ aspectRatio: '15 / 28' }}
+      />
+      <div className="flex min-w-0 flex-col justify-center gap-2">
+        <p className="kicker text-[0.58rem] text-nivea">Ganaste</p>
+        <p className="display text-[clamp(2rem,4.2vw,2.8rem)] leading-none">
+          15% <em className="text-nivea">off</em>
+        </p>
+        <p className="text-[0.95rem] leading-snug font-bold">en {product.name}</p>
+        <span className="mt-1">
+          <CopyCode code={demoCodes[letter]} />
+        </span>
+        <p className="text-[0.7rem] text-ink/55">Código ficticio. No válido para compras.</p>
+      </div>
+    </div>
+  )
+}
+
 /** Premio: se gana jugando el quiz. Cierre de la experiencia. */
 export function Rewards() {
   const root = useRef<HTMLElement>(null)
@@ -219,9 +259,11 @@ export function Rewards() {
             {!result
               ? 'Jugá el quiz, descubrí tu personalidad de verano y abrí la lata.'
               : opened
-                ? `Este es tu premio de ${personalities[result.primary].name}. Gracias por jugar.`
+                ? `Como ${personalities[result.primary].name}, te llevás un descuento en tu NIVEA SUN.`
                 : 'Lo desbloqueaste. Abrí la lata para descubrir tu premio.'}
           </p>
+
+          {result && opened && <PrizeCard letter={result.primary} />}
 
           <div data-reveal className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
             {!result ? (
