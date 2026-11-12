@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { Letter } from '../data/quiz'
-import { ArrowRight, Copy, Hand, Lock, RotateCcw, Share2 } from 'lucide-react'
+import { ArrowRight, Copy, Hand, Lock, RotateCcw, Share2, Tag } from 'lucide-react'
 import { gsap, prefersReducedMotion, useGSAP } from '../animations/gsap'
 import { useReveal } from '../animations/useReveal'
 import { personalities } from '../data/personalities'
@@ -12,6 +12,7 @@ import { copyText } from '../lib/share'
 import { useToast } from '../components/Toast'
 import { Button } from '../components/Button'
 import { Tin } from '../components/Tin'
+import { RedeemOverlay } from './RedeemOverlay'
 
 /** Posición final de la tapa, relativa al tamaño de la lata (en celular se corre hacia abajo). */
 const lidOpen = () =>
@@ -203,7 +204,7 @@ function PrizeTin() {
 }
 
 /** Lo que ganaste, dicho con claridad: foto del producto, descuento y código. */
-function PrizeCard({ letter }: { letter: Letter }) {
+function PrizeCard({ letter, onRedeem }: { letter: Letter; onRedeem: () => void }) {
   const product = products[letter]
   const root = useRef<HTMLDivElement>(null)
   useGSAP(
@@ -231,6 +232,13 @@ function PrizeCard({ letter }: { letter: Letter }) {
           <CopyCode code={demoCodes[letter]} />
         </span>
         <p className="text-[0.7rem] text-ink/55">Código ficticio. No válido para compras.</p>
+        <button
+          type="button"
+          onClick={onRedeem}
+          className="kicker mt-2 inline-flex items-center gap-2 self-start bg-ink px-4 py-3 text-[0.6rem] text-paper transition-colors hover:bg-nivea"
+        >
+          <Tag className="h-3.5 w-3.5" aria-hidden /> Canjear mi cupón
+        </button>
       </div>
     </div>
   )
@@ -244,6 +252,7 @@ export function Rewards() {
   useReveal(root)
 
   const opened = state.rewards.lidOpened && Boolean(result)
+  const [redeeming, setRedeeming] = useState(false)
 
   return (
     <section ref={root} id="premio" className="bg-studio relative overflow-hidden text-paper">
@@ -263,7 +272,7 @@ export function Rewards() {
                 : 'Lo desbloqueaste. Abrí la lata para descubrir tu premio.'}
           </p>
 
-          {result && opened && <PrizeCard letter={result.primary} />}
+          {result && opened && <PrizeCard letter={result.primary} onRedeem={() => setRedeeming(true)} />}
 
           <div data-reveal className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
             {!result ? (
@@ -273,8 +282,11 @@ export function Rewards() {
             ) : (
               opened && (
                 <>
-                  <Button onClick={share} icon={<Share2 className="h-4 w-4" />}>
-                    Compartir resultado
+                  <Button onClick={() => setRedeeming(true)} icon={<Tag className="h-4 w-4" />}>
+                    Canjear mi cupón
+                  </Button>
+                  <Button variant="outline-light" onClick={share} icon={<Share2 className="h-4 w-4" />}>
+                    Compartir
                   </Button>
                   <Button variant="text" onClick={restart} icon={<RotateCcw className="h-4 w-4" />}>
                     Volver a jugar
@@ -292,6 +304,7 @@ export function Rewards() {
           <PrizeTin />
         </div>
       </div>
+      {redeeming && result && <RedeemOverlay letter={result.primary} onClose={() => setRedeeming(false)} />}
     </section>
   )
 }
