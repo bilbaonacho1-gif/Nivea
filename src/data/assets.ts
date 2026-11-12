@@ -13,10 +13,10 @@ export const images = {
   /** Portada: frame del aviso NIVEA Creme provisto, sin el texto original. */
   hero: '/images/hero.jpg',
   /** Lata NIVEA Creme recortada de la portada: tapa y base (la base se reconstruyó bajo la tapa). */
-  tinLid: '/images/tin-lid.png',
-  tinBase: '/images/tin-base.png',
-  /** Packshot recortado del carrusel de referencia (versión UK, baja resolución). */
-  productProtectMoisture: '/images/product-protect-moisture.png',
+  tinLid: '/images/tin-lid.webp',
+  tinBase: '/images/tin-base.webp',
+  /** Packshot recortado del carrusel de referencia (versión UK, reescalado con IA). */
+  productProtectMoisture: '/images/product-protect-moisture.webp',
 
   /** Los cuatro envases, recortados de la placa de productos del carrusel. */
   wonProtectMoisture: '/images/won-protect-moisture.jpg',
