@@ -18,6 +18,12 @@ export const images = {
   /** Packshot recortado del carrusel de referencia (versión UK, baja resolución). */
   productProtectMoisture: '/images/product-protect-moisture.png',
 
+  /** Los cuatro envases, recortados de la placa de productos del carrusel. */
+  wonProtectMoisture: '/images/won-protect-moisture.jpg',
+  wonDryTouch: '/images/won-dry-touch.jpg',
+  wonFaceControlBrillo: '/images/won-face-control-brillo.jpg',
+  wonFaceAntimanchas: '/images/won-face-antimanchas.jpg',
+
   summerBeach: '/images/summer-beach.jpg', // ref: sombrillas a rayas
   pool: '/images/pool-background.jpg', // ref: agua de pileta
   summerSkincare: '/images/summer-skincare.jpg', // ref: sombrero, libro y anteojos sobre toalla
